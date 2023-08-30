@@ -1,8 +1,22 @@
 <template lang="">
-    <div>Home</div>
+    <div>
+        <NavBar />
+        <PanelCreateChart v-if="false" />
+        <PanelDasboard v-else />
+    </div>
 </template>
 
 <script>
-export default {}
+import NavBar from '@/components/NavBar/NavBar.vue'
+import PanelDasboard from '@/components/PanelDashboard/PanelDashboard.vue'
+import PanelCreateChart from '@/components/PanelCreateChart/PanelCreateChart.vue'
+
+export default {
+    components: {
+        NavBar,
+        PanelDasboard,
+        PanelCreateChart
+    }
+}
 </script>
-<style scoped></style>
+<style></style>
