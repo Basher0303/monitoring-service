@@ -4,19 +4,15 @@
             <div class="title">Dashboard</div>
         </div>
         <div class="button-group">
-            <NButton strong secondary type="success">
+            <NButton strong secondary type="success" @click="$router.push('/create')">
                 <template #icon>
                     <NIcon><Icon icon="ic:baseline-addchart" /></NIcon>
-                </template>
-            </NButton>
-            <NButton strong secondary type="primary">
-                <template #icon>
-                    <NIcon><Icon icon="tabler:edit" /></NIcon>
                 </template>
             </NButton>
             <NSelect
                 :options="selectTimeRangeOptions"
                 :consistent-menu-width="false"
+                placeholder="Временной интервал"
                 class="select-time-range"
             />
             <NInputGroup class="select-time-update">
@@ -25,7 +21,11 @@
                         <NIcon><Icon icon="tabler:reload" /></NIcon>
                     </template>
                 </NButton>
-                <NSelect :options="selectTimeUpdateOptions" :consistent-menu-width="false" />
+                <NSelect
+                    :options="selectTimeUpdateOptions"
+                    :consistent-menu-width="false"
+                    placeholder="Период обновления"
+                />
             </NInputGroup>
         </div>
     </div>
@@ -83,7 +83,8 @@ export default {
 .main {
     display: flex;
     justify-content: space-between;
-    padding: 12px 24px;
+    padding-top: 24px;
+    padding-bottom: 24px;
 }
 .header {
 }
@@ -99,10 +100,10 @@ export default {
 }
 
 .button-group .select-time-range {
-    width: 150px;
+    width: 200px;
 }
 
 .button-group .select-time-update {
-    width: 200px;
+    width: 250px;
 }
 </style>

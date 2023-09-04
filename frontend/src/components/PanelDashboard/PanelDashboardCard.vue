@@ -8,7 +8,7 @@
     >
         <div v-if="label" class="title">{{ label }}</div>
         <div class="h-100">
-            <VueApexCharts height="100%" :options="chart.chartOptions" :series="chart.series" />
+            <VueApexCharts height="100%" :options="chartOptions" :series="series" />
         </div>
     </component>
 </template>
@@ -41,49 +41,7 @@ export default {
         }
     },
     data() {
-        return {
-            chart: {
-                series: [
-                    {
-                        name: 'series1',
-                        data: [31, 40, 28, 51, 42, 100]
-                    }
-                ],
-                chartOptions: {
-                    chart: {
-                        type: 'area',
-                        toolbar: {
-                            show: false
-                        },
-                        zoom: {
-                            enabled: false
-                        }
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    stroke: {
-                        curve: 'smooth'
-                    },
-                    xaxis: {
-                        type: 'datetime',
-                        categories: [
-                            '2018-09-19T00:00:00.000Z',
-                            '2018-09-19T01:30:00.000Z',
-                            '2018-09-19T02:30:00.000Z',
-                            '2018-09-19T03:30:00.000Z',
-                            '2018-09-19T04:30:00.000Z',
-                            '2018-09-19T05:30:00.000Z'
-                        ]
-                    },
-                    tooltip: {
-                        x: {
-                            format: 'dd/MM/yy HH:mm'
-                        }
-                    }
-                }
-            }
-        }
+        return {}
     },
     methods: {
         handler(e) {
