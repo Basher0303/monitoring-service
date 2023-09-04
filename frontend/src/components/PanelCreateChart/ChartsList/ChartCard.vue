@@ -1,5 +1,5 @@
 <template lang="">
-    <div class="main">
+    <div class="main" :class="{ active: isActive }">
         <img src="https://quickchart.io/images/bar_chart_logo.svg" class="icon" />
         <div>
             <div class="title">{{ title }}</div>
@@ -16,6 +16,9 @@ export default {
         },
         desciprion: {
             required: true
+        },
+        isActive: {
+            default: false
         }
     }
 }
@@ -31,6 +34,9 @@ export default {
 .main:hover {
     cursor: pointer;
     background-color: #eeeeee;
+}
+.main.active {
+    background-color: #dee7f2;
 }
 
 .icon {

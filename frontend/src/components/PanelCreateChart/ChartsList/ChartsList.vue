@@ -1,11 +1,13 @@
 <template lang="">
-    <div>
+    <div class="main">
         <ChartCard
             v-for="chart in chartsList"
             :key="chart.type"
             :title="chart.title"
             :desciprion="chart.desciprion"
-            @click="$emit('select', chart.type)"
+            :isActive="typeComp == chart.type"
+            @click="typeComp = chart.type"
+            class="item"
         />
     </div>
 </template>
@@ -15,30 +17,50 @@ export default {
     components: {
         ChartCard
     },
+    props: {
+        type: {
+            required: true
+        }
+    },
     created() {
         this.chartsList = [
             {
                 title: 'Линия',
                 desciprion: 'Базовая линейная диаграмма',
-                type: 'Line'
+                type: 'line'
             },
             {
-                title: 'Линия',
+                title: 'Область',
                 desciprion: 'Базовая линейная диаграмма',
-                type: 'Line'
+                type: 'area'
             },
             {
-                title: 'Линия',
+                title: 'Столбцы',
                 desciprion: 'Базовая линейная диаграмма',
-                type: 'Line'
+                type: 'column'
             },
             {
-                title: 'Линия',
+                title: 'Бар',
                 desciprion: 'Базовая линейная диаграмма',
-                type: 'Line'
+                type: 'bar'
             }
         ]
+    },
+    computed: {
+        typeComp: {
+            get() {
+                return this.type
+            },
+            set(value) {
+                this.$emit('update:type', value)
+                this.$emit('update')
+            }
+        }
     }
 }
 </script>
-<style lang=""></style>
+<style scoped>
+.main .item:not(:last-child) {
+    margin-bottom: 5px;
+}
+</style>
