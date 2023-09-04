@@ -4,7 +4,6 @@
         content-style="display: flex; flex-direction: column"
         style="display: flex; flex-direction: column"
         class="h-100"
-        @contextmenu="handler"
     >
         <div v-if="label" class="title">{{ label }}</div>
         <div class="h-100">
@@ -42,11 +41,6 @@ export default {
     },
     data() {
         return {}
-    },
-    methods: {
-        handler(e) {
-            e.preventDefault()
-        }
     }
 }
 </script>

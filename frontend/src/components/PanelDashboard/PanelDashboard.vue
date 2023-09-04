@@ -1,6 +1,6 @@
 <template>
     <div v-if="getCards.length > 0">
-        <GridLayout v-if="isRenderGrid" v-model:layout="layout" :responsive="true">
+        <GridLayout v-if="isRenderGrid" :key="key" v-model:layout="layout" :responsive="true">
             <GridItem
                 v-for="(item, index) in layout"
                 :key="item.i"
@@ -10,6 +10,9 @@
                 :w="item.w"
                 :h="item.h"
                 :static="false"
+                @contextmenu="handlerContextmenuItem($event, index)"
+                drag-allow-from=".vue-draggable-handle"
+                drag-ignore-from=".no-drag"
             >
                 <div class="grid-item-content">
                     <div class="vue-draggable-handle">
@@ -24,10 +27,20 @@
                     />
                 </div>
             </GridItem>
+            <NDropdown
+                placement="bottom-start"
+                trigger="manual"
+                :options="contextMenu.options"
+                :x="contextMenu.position.x"
+                :y="contextMenu.position.y"
+                :show="contextMenu.isShow"
+                @clickoutside="contextMenu.isShow = false"
+                @select="handleSelectContextMenu"
+            />
         </GridLayout>
     </div>
     <div v-else class="alert-block">
-        <NAlert title="Начните прямо сейчас" type="success" @click="$router.push('/create')">
+        <NAlert title="Начните прямо сейчас" type="info" @click="$router.push('/create')">
             Нажмите сюда, чтобы создать свою первую карточку
         </NAlert>
     </div>
@@ -35,22 +48,52 @@
 
 <script>
 import { GridLayout, GridItem } from 'grid-layout-plus'
-import { NAlert } from 'naive-ui'
+import { NAlert, NDropdown } from 'naive-ui'
 import PanelDashboardCardVue from './PanelDashboardCard.vue'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { h, nextTick } from 'vue'
+import { Icon } from '@iconify/vue'
 
 export default {
     components: {
         GridLayout,
         GridItem,
         NAlert,
+        NDropdown,
+        Icon,
         PanelDashboardCardVue
     },
     data() {
         return {
+            key: 1,
             layout: null,
             isRenderGrid: false,
-            isRenderCharts: false
+            isRenderCharts: false,
+            contextMenu: {
+                isShow: false,
+                itemIndex: 0,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                options: [
+                    {
+                        key: 'edit',
+                        label: 'Изменить',
+                        icon: () => h(Icon, { icon: 'tabler:edit' })
+                    },
+                    {
+                        key: 'duplicate',
+                        label: 'Дублировать',
+                        icon: () => h(Icon, { icon: 'bx:duplicate' })
+                    },
+                    {
+                        key: 'remove',
+                        label: 'Удалить',
+                        icon: () => h(Icon, { icon: 'fluent:delete-12-regular' })
+                    }
+                ]
+            }
         }
     },
     watch: {
@@ -72,7 +115,34 @@ export default {
         ...mapGetters('dashboard', ['getCards'])
     },
     methods: {
-        ...mapMutations('dashboard', ['setCardsPosition'])
+        ...mapMutations('dashboard', ['setCardsPosition', 'removeCard']),
+        ...mapActions('dashboard', ['duplicateCard']),
+        handlerContextmenuItem(e, index) {
+            e.preventDefault()
+            this.contextMenu.isShow = false
+            nextTick().then(() => {
+                this.contextMenu.isShow = true
+                this.contextMenu.itemIndex = index
+                this.contextMenu.position.x = e.clientX
+                this.contextMenu.position.y = e.clientY
+            })
+        },
+        handleSelectContextMenu(key) {
+            this.contextMenu.isShow = false
+            if (key == 'edit') {
+                console.log('edit')
+            } else if (key == 'duplicate') {
+                this.isRenderCharts = false
+                this.duplicateCard(this.contextMenu.itemIndex)
+                this.layout = this.getCards.map((item) => item.position)
+                setTimeout(() => {
+                    this.isRenderCharts = true
+                }, 10)
+            } else if (key == 'remove') {
+                this.removeCard(this.contextMenu.itemIndex)
+                this.layout = this.getCards.map((item) => item.position)
+            }
+        }
     }
 }
 </script>

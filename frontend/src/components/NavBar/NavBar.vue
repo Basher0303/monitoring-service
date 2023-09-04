@@ -4,10 +4,11 @@
             <div class="title">Dashboard</div>
         </div>
         <div class="button-group">
-            <NButton strong secondary type="success" @click="$router.push('/create')">
+            <NButton secondary type="success" @click="$router.push('/create')">
                 <template #icon>
                     <NIcon><Icon icon="ic:baseline-addchart" /></NIcon>
                 </template>
+                <template #default><span style="font-weight: 600">Добавить</span></template>
             </NButton>
             <NSelect
                 :options="selectTimeRangeOptions"

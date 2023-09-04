@@ -49,9 +49,11 @@ export default {
         ]
     }),
     mutations: {
-        createCard(state, { label, isCardShow, options }) {
+        createCard(state, { label, isCardShow, options, position }) {
+            const positionObj = position ?? { x: 0, y: 0, w: 4, h: 2 }
+            positionObj.i = Date.now()
             state.cards.forEach((item) => {
-                item.position.y += 2
+                item.position.y += positionObj.h
             })
             state.cards.push({
                 label,
@@ -63,13 +65,23 @@ export default {
                         data: [31, 40, 28, 51, 42, 100]
                     }
                 ],
-                position: { x: 0, y: 0, w: 4, h: 2, i: Date.now() }
+                position: positionObj
             })
         },
         setCardsPosition(state, payload) {
             payload.forEach((el, index) => {
                 state.cards[index].position = el
             })
+        },
+        removeCard(state, inex) {
+            state.cards.splice(inex, 1)
+        }
+    },
+    actions: {
+        duplicateCard(context, index) {
+            console.log('file: dashboard.js:80 ~ duplicateCard ~ index:', index)
+
+            context.commit('createCard', JSON.parse(JSON.stringify(context.state.cards[index])))
         }
     },
     getters: {
