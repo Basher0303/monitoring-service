@@ -8,3 +8,15 @@ body {
     padding-left: 12px;
     padding-right: 12px;
 }
+
+.vgl-item__resizer {
+    width: 15px !important;
+    height: 15px !important;
+    right: 3px !important;
+    bottom: 3px !important;
+}
+
+.vgl-item__resizer::before {
+    border-color: #bebebe !important;
+    border-bottom-right-radius: 8px !important;
+}

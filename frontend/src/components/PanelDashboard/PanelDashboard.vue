@@ -11,13 +11,18 @@
                 :h="item.h"
                 :static="false"
             >
-                <PanelDashboardCardVue
-                    v-if="isRenderCharts"
-                    :label="getCards[index].label"
-                    :isCardShow="getCards[index].isCardShow"
-                    :chartOptions="getCards[index].options"
-                    :series="getCards[index].series"
-                />
+                <div class="grid-item-content">
+                    <div class="vue-draggable-handle">
+                        <Icon icon="mdi:drag" />
+                    </div>
+                    <PanelDashboardCardVue
+                        v-if="isRenderCharts"
+                        :label="getCards[index].label"
+                        :isCardShow="getCards[index].isCardShow"
+                        :chartOptions="getCards[index].options"
+                        :series="getCards[index].series"
+                    />
+                </div>
             </GridItem>
         </GridLayout>
     </div>
@@ -82,5 +87,27 @@ export default {
     position: absolute;
     align-items: center;
     justify-content: center;
+}
+
+.grid-item-content {
+    height: 100%;
+}
+.vue-draggable-handle {
+    display: flex;
+    justify-content: flex-end;
+    z-index: 1;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 100%;
+    height: 25px;
+    padding: 3px 3px 0 0;
+    cursor: pointer;
+    color: #969696;
+}
+
+.vue-draggable-handle svg {
+    width: 25px;
+    height: 25px;
 }
 </style>
