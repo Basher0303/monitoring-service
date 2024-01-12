@@ -28,6 +28,7 @@
                     placeholder="Период обновления"
                 />
             </NInputGroup>
+            <NButton strong secondary type="error" @click="handleClickLogout"> Выйти </NButton>
         </div>
     </div>
 </template>
@@ -35,6 +36,7 @@
 <script>
 import { NButton, NIcon, NSelect, NInputGroup } from 'naive-ui'
 import { Icon } from '@iconify/vue'
+import { mapMutations } from 'vuex'
 export default {
     components: {
         NButton,
@@ -76,6 +78,16 @@ export default {
                 value: '3'
             }
         ]
+    },
+    methods: {
+        ...mapMutations('user', ['clearInfo']),
+        async handleClickLogout() {
+            try {
+                await this.$api.user.auth.logout()
+                this.clearInfo()
+                this.$router.push('/login')
+            } catch (error) {}
+        }
     }
 }
 </script>

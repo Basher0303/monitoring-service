@@ -1,48 +1,50 @@
 <template>
-    <div v-if="getCards.length > 0">
-        <GridLayout v-if="isRenderGrid" :key="key" v-model:layout="layout" :responsive="true">
-            <GridItem
-                v-for="(item, index) in layout"
-                :key="item.i"
-                :i="item.i"
-                :x="item.x"
-                :y="item.y"
-                :w="item.w"
-                :h="item.h"
-                :static="false"
-                @contextmenu="handlerContextmenuItem($event, index)"
-                drag-allow-from=".vue-draggable-handle"
-                drag-ignore-from=".no-drag"
-            >
-                <div class="grid-item-content">
-                    <div class="vue-draggable-handle">
-                        <Icon icon="mdi:drag" />
+    <div>
+        <div v-if="getCards.length > 0">
+            <GridLayout v-if="isRenderGrid" :key="key" v-model:layout="layout" :responsive="true">
+                <GridItem
+                    v-for="(item, index) in layout"
+                    :key="item.i"
+                    :i="item.i"
+                    :x="item.x"
+                    :y="item.y"
+                    :w="item.w"
+                    :h="item.h"
+                    :static="false"
+                    @contextmenu="handlerContextmenuItem($event, index)"
+                    drag-allow-from=".vue-draggable-handle"
+                    drag-ignore-from=".no-drag"
+                >
+                    <div class="grid-item-content">
+                        <div class="vue-draggable-handle">
+                            <Icon icon="mdi:drag" />
+                        </div>
+                        <PanelDashboardCardVue
+                            v-if="isRenderCharts"
+                            :label="getCards[index].label"
+                            :isCardShow="getCards[index].isCardShow"
+                            :chartOptions="getCards[index].options"
+                            :series="getCards[index].series"
+                        />
                     </div>
-                    <PanelDashboardCardVue
-                        v-if="isRenderCharts"
-                        :label="getCards[index].label"
-                        :isCardShow="getCards[index].isCardShow"
-                        :chartOptions="getCards[index].options"
-                        :series="getCards[index].series"
-                    />
-                </div>
-            </GridItem>
-            <NDropdown
-                placement="bottom-start"
-                trigger="manual"
-                :options="contextMenu.options"
-                :x="contextMenu.position.x"
-                :y="contextMenu.position.y"
-                :show="contextMenu.isShow"
-                @clickoutside="contextMenu.isShow = false"
-                @select="handleSelectContextMenu"
-            />
-        </GridLayout>
-    </div>
-    <div v-else class="alert-block">
-        <NAlert title="Начните прямо сейчас" type="info" @click="$router.push('/create')">
-            Нажмите сюда, чтобы создать свою первую карточку
-        </NAlert>
+                </GridItem>
+                <NDropdown
+                    placement="bottom-start"
+                    trigger="manual"
+                    :options="contextMenu.options"
+                    :x="contextMenu.position.x"
+                    :y="contextMenu.position.y"
+                    :show="contextMenu.isShow"
+                    @clickoutside="contextMenu.isShow = false"
+                    @select="handleSelectContextMenu"
+                />
+            </GridLayout>
+        </div>
+        <div v-else class="alert-block">
+            <NAlert title="Начните прямо сейчас" type="info" @click="$router.push('/create')">
+                Нажмите сюда, чтобы создать свою первую карточку
+            </NAlert>
+        </div>
     </div>
 </template>
 
@@ -151,8 +153,9 @@ export default {
 .alert-block {
     cursor: pointer;
     display: flex;
-    width: 100vw;
-    height: 100vh;
+    width: 99vw;
+    margin-top: 86px;
+    height: calc(100vh - 86px);
     top: 0;
     position: absolute;
     align-items: center;

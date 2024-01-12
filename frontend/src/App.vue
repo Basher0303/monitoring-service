@@ -9,7 +9,7 @@
             <NNotificationProvider :max="3" placement="top-right">
                 <NDialogProvider>
                     <NLoadingBarProvider>
-                        <router-view></router-view>
+                        <RouterView v-if="isUserInfoLoaded"></RouterView>
                     </NLoadingBarProvider>
                 </NDialogProvider>
             </NNotificationProvider>
@@ -26,10 +26,19 @@ import {
     NDialogProvider
 } from 'naive-ui'
 import { ruRU, dateRuRU } from 'naive-ui'
+import { mapMutations } from 'vuex'
 
 export default {
+    components: {
+        NConfigProvider,
+        NNotificationProvider,
+        NMessageProvider,
+        NLoadingBarProvider,
+        NDialogProvider
+    },
     data() {
         return {
+            isUserInfoLoaded: false,
             ruRU,
             dateRuRU,
             themeOverrides: {
@@ -121,12 +130,21 @@ export default {
             breakpoints: { xs: 0, s: 750, m: 1024, l: 1280, xl: 1536, xxl: 1920 }
         }
     },
-    components: {
-        NConfigProvider,
-        NNotificationProvider,
-        NMessageProvider,
-        NLoadingBarProvider,
-        NDialogProvider
+    async created() {
+        this.loadUserInfo()
+    },
+    methods: {
+        ...mapMutations('user', ['setInfo', 'setLoaded']),
+        async loadUserInfo() {
+            try {
+                const fetchData = (await this.$api.user.auth.refreshToken()).data
+                this.setInfo(fetchData.user)
+            } catch (error) {
+                console.log(error)
+            }
+            this.setLoaded(true)
+            this.isUserInfoLoaded = true
+        }
     }
 }
 </script>

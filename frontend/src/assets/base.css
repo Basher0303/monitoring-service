@@ -124,5 +124,19 @@ body {
 }
 
 .w-100 {
-    height: 100% !important;
+    width: 100% !important;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.n-form-item-feedback-wrapper {
+    font-size: 14px !important;
 }
