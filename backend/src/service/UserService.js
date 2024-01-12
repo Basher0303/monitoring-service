@@ -10,7 +10,7 @@ module.exports = {
     async registration (email, password) {
         const candidate = await User.findOne({email});
         if(candidate) {
-            throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует`);
+            throw ApiError.BadRequest(`Email занят`);
         }
         const hashPassword = await bcrypt.hash(password, 7); 
         const activationLink = uuid.v4();
@@ -41,7 +41,7 @@ module.exports = {
     async login(email, password) {
         const candidate = await User.findOne({email});
         if(!candidate) {
-            throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} не найден`);
+            throw ApiError.BadRequest(`Пользователь не найден`);
         }
 
         const isPassEquals = await bcrypt.compare(password, candidate.password);
@@ -72,10 +72,10 @@ module.exports = {
             throw ApiError.Unauthorized();
         }
 
-        const user = User.findById(userData.id);
+        const user = await User.findById(userData.id);
         const userDto = new UserDto(user);
         const tokens = await tokenService.generateTokens({...userDto});
-        await tokenService.saveToken(candidate._id, tokens.refreshToken);
+        await tokenService.saveToken(user._id, tokens.refreshToken);
         return {
             ...tokens,
             user: {...userDto}
