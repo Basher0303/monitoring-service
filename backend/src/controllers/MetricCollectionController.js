@@ -1,4 +1,3 @@
-const multer = require('multer');
 const { MetricCollection } = require("../models");
 const { RequestHandler } = require("express");
 
@@ -18,18 +17,16 @@ class MetricCollectionDTO {
 	}
 }
 
-const upload = multer();
-
 module.exports = {
     /**@type {RequestHandler} */
-	getAll: [async (req, res) => {
+	getAll: async (req, res) => {
         const result = await MetricCollection.find({});
 		res.status(200);
 		res.send(result);
-    }],
+    },
 
 	/**@type {RequestHandler} */
-	getById: [async (req, res) => {
+	getById: async (req, res) => {
 		const id = req.params.id;
 		if (id.length !== 24) {
 			res.status(400);
@@ -46,10 +43,10 @@ module.exports = {
 			}
 			res.send(resCollection);
 		}
-    }],
+    },
 
 	/**@type {RequestHandler} */
-	add: [upload.array('name'), async (req, res) => {
+	add: async (req, res) => {
 		const body = req.body;
 		if(!body.name ) {
 			res.status(400);
@@ -72,10 +69,10 @@ module.exports = {
 				message: "Bad request body.",
 			});
 		}
-	}],
+	},
 
 	/**@type {RequestHandler} */
-	delete: [async (req, res) => {
+	delete: async (req, res) => {
 		const id = req.params.id;
 		if (id.length !== 24) {
 			res.status(400);
@@ -91,5 +88,5 @@ module.exports = {
 			}
 			res.send(result);
 		}
-	}],
+	},
 };

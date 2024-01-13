@@ -4,7 +4,7 @@ const { UserController } = require("../controllers")
 const multer = require('multer');
 const upload = multer();
 const { body } = require('express-validator');
-const authMiddleware = require('../middlewares/AuthMiddleware');
+
 
 router.post('/registration', 
     upload.array('email', 'password'), 

@@ -1,16 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const { MetricCollectionController } = require("../controllers");
+const authMiddleware = require('../middlewares/AuthMiddleware');
+const multer = require('multer');
+const upload = multer();
 
-router
-	.route("/")
-	.get(...MetricCollectionController.getAll)
-	.put(...MetricCollectionController.add)
+router.get('/', authMiddleware, MetricCollectionController.getAll);
+router.post('/', authMiddleware, upload.array('name'), MetricCollectionController.add);
 
-router
-	.route("/:id")
-	.get(...MetricCollectionController.getById)
-	.delete(...MetricCollectionController.delete)
-
+router.get("/:id", authMiddleware, MetricCollectionController.getById);
+router.delete("/:id", authMiddleware, MetricCollectionController.delete);
 	
 module.exports = router;

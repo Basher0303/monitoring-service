@@ -6,14 +6,14 @@ const upload = multer();
 
 module.exports = {
     /**@type {RequestHandler} */
-	getAll: [async (req, res) => {
+	getAll: async (req, res) => {
         const result = await Metric.find({});
 		res.status(200);
 		res.send(result);
-    }],
+    },
 
 	/**@type {RequestHandler} */
-	getById: [async (req, res) => {
+	getById: async (req, res) => {
 		const id = req.params.id;
 		if (id.length !== 24) {
 			res.status(400);
@@ -29,10 +29,10 @@ module.exports = {
 			}
 			res.send(result);
 		}
-    }],
+    },
 
 	/**@type {RequestHandler} */
-	getByCollectionId: [async (req, res) => {
+	getByCollectionId: async (req, res) => {
 		const id = req.params.id;
 		if (id.length !== 24) {
 			res.status(400);
@@ -50,10 +50,10 @@ module.exports = {
 			}
 			res.send(resMetrics);
 		}
-    }],
+    },
 	
 	/**@type {RequestHandler} */
-	add: [upload.array('collectionId', 'value'), async (req, res) => {
+	add: async (req, res) => {
 		const body = req.body;
 		if(!body.collectionId || !body.value) {
 			res.status(400);
@@ -79,10 +79,10 @@ module.exports = {
 			}
 		}
 	
-	}],
+	},
 
 	/**@type {RequestHandler} */
-	delete: [async (req, res) => {
+	delete: async (req, res) => {
 		const id = req.params.id;
 		if (id.length !== 24) {
 			res.status(400);
@@ -98,5 +98,5 @@ module.exports = {
 			}
 			res.send(result);
 		}
-	}],
+	},
 };
