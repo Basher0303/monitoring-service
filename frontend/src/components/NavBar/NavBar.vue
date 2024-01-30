@@ -23,6 +23,7 @@
                     </template>
                 </NButton>
                 <NSelect
+                    v-model:value="timeUpdateValue"
                     :options="selectTimeUpdateOptions"
                     :consistent-menu-width="false"
                     placeholder="Период обновления"
@@ -36,7 +37,7 @@
 <script>
 import { NButton, NIcon, NSelect, NInputGroup } from 'naive-ui'
 import { Icon } from '@iconify/vue'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters, mapActions } from 'vuex'
 export default {
     components: {
         NButton,
@@ -67,20 +68,32 @@ export default {
         this.selectTimeUpdateOptions = [
             {
                 label: '1 минута',
-                value: '1'
+                value: 60 * 1000
             },
             {
                 label: '5 минут',
-                value: '2'
+                value: 5 * 60 * 1000
             },
             {
                 label: '10 минут',
-                value: '3'
+                value: 10 * 60 * 1000
             }
         ]
     },
+    computed: {
+        ...mapGetters('dashboard', ['getOptions']),
+        timeUpdateValue: {
+            get() {
+                return this.getOptions.timeUpdate
+            },
+            set(value) {
+                this.updateOptions({ key: 'timeUpdate', value: value })
+            }
+        }
+    },
     methods: {
         ...mapMutations('user', ['clearInfo']),
+        ...mapActions('dashboard', ['updateOptions']),
         async handleClickLogout() {
             try {
                 await this.$api.user.auth.logout()

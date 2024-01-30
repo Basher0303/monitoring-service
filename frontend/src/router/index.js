@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../pages/home/indexPage.vue'
+import DashboardPage from '../pages/dashboard/indexPage.vue'
 import CreatePage from '../pages/create/indexPage.vue'
 import LoginPage from '../pages/login/IndexPage.vue'
 import RegistrationPage from '../pages/registration/IndexPage.vue'
@@ -12,6 +13,13 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: HomePage,
+            meta: {
+                isAuth: true
+            }
+        },
+        {
+            path: '/dashboard/:id',
+            component: DashboardPage,
             meta: {
                 isAuth: true
             }

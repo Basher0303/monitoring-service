@@ -1,36 +1,31 @@
 <template lang="">
     <NGrid cols="12" :x-gap="20" responsive="screen">
         <NGridItem span="8">
-            <NCard class="h-100">
+            <NCard style="height: 400px">
                 <div v-if="false" class="empty-block">Данные отсутствуют</div>
                 <VueApexCharts height="100%" :options="cardData.options" :series="series" />
             </NCard>
+            <NCard style="margin-top: 20px" title="Источник данных">
+                <SourceData @updateCollections="handleUpdateSourceData" />
+            </NCard>
         </NGridItem>
-        <NGridItem span="4">
+        <NGridItem span="4" class="h-100">
             <NCard class="h-100">
-                <template #header>
-                    <NSteps v-model:current="step">
-                        <NStep title="Тип" />
-                        <NStep title="Внешний вид" />
-                        <NStep title="Основное" />
-                    </NSteps>
-                </template>
                 <template #default>
+                    <NDivider style="margin-top: 0px">Настройки выбранного графика</NDivider>
                     <ChartsList
-                        v-if="step == 1"
                         v-model:type="cardData.options.chart.type"
                         @update="handlerUpdateChartOptions"
                     />
                     <AppearanceList
-                        v-else-if="step == 2"
                         v-model:colors="cardData.options.colors"
                         v-model:widthStroke="cardData.options.stroke.width"
                         v-model:countDashes="cardData.options.stroke.dashArray"
                         v-model:typeCurve="cardData.options.stroke.curve"
                         @update="handlerUpdateChartOptions"
                     />
+                    <NDivider>Настройки карточки</NDivider>
                     <BasicList
-                        v-else-if="step == 3"
                         v-model:label="cardData.label"
                         v-model:isCardShow="cardData.isCardShow"
                         @update="handlerUpdateChartOptions"
@@ -39,7 +34,7 @@
                 <template #footer>
                     <div class="button-group-action">
                         <NButton strong secondary @click="$router.push('/')">Закрыть</NButton>
-                        <NButton strong secondary type="primary" @click="$emit('create', cardData)">
+                        <NButton strong secondary type="primary" @click="handleClickSave">
                             Создать
                         </NButton>
                     </div>
@@ -50,10 +45,11 @@
 </template>
 
 <script>
-import { NGrid, NGridItem, NCard, NButton, NSteps, NStep } from 'naive-ui'
+import { NGrid, NGridItem, NCard, NButton, NDivider } from 'naive-ui'
 import ChartsList from './ChartsList/ChartsList.vue'
 import AppearanceList from './AppearanceList/AppearanceList.vue'
 import BasicList from './BasicList/BasicList.vue'
+import SourceData from './SourceData/SourceData.vue'
 import VueApexCharts from 'vue3-apexcharts'
 
 export default {
@@ -62,6 +58,9 @@ export default {
             cardData: {
                 label: '',
                 isCardShow: true,
+                sourceData: {
+                    collections: []
+                },
                 options: {
                     chart: {
                         type: 'area',
@@ -82,15 +81,7 @@ export default {
                         dashArray: 0
                     },
                     xaxis: {
-                        type: 'datetime',
-                        categories: [
-                            '2018-09-19T00:00:00.000Z',
-                            '2018-09-19T01:30:00.000Z',
-                            '2018-09-19T02:30:00.000Z',
-                            '2018-09-19T03:30:00.000Z',
-                            '2018-09-19T04:30:00.000Z',
-                            '2018-09-19T05:30:00.000Z'
-                        ]
+                        type: 'datetime'
                     },
                     tooltip: {
                         x: {
@@ -99,13 +90,7 @@ export default {
                     }
                 }
             },
-            series: [
-                {
-                    name: 'series1',
-                    data: [31, 40, 28, 51, 42, 100]
-                }
-            ],
-            step: 1
+            series: []
         }
     },
     watch: {},
@@ -115,9 +100,9 @@ export default {
         NGridItem,
         NCard,
         NButton,
-        NSteps,
-        NStep,
+        NDivider,
         ChartsList,
+        SourceData,
         AppearanceList,
         BasicList,
         VueApexCharts
@@ -128,6 +113,22 @@ export default {
         },
         handlerUpdateChartOptions() {
             this.cardData.options = { ...this.cardData.options }
+        },
+        handleClickSave() {
+            this.$emit('create', this.cardData)
+        },
+        async handleUpdateSourceData(collections) {
+            this.cardData.sourceData = collections
+            this.series = []
+            for (const collection of collections) {
+                const fetchData = (
+                    await this.$api.metrics.metrics.getInCollection({ id: collection.id })
+                ).data
+                this.series.push({
+                    name: collection.title,
+                    data: fetchData.map((el) => [el.createdAt, el.value])
+                })
+            }
         }
     }
 }

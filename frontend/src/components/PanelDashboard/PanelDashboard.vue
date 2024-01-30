@@ -20,11 +20,11 @@
                             <Icon icon="mdi:drag" />
                         </div>
                         <PanelDashboardCardVue
-                            v-if="isRenderCharts"
+                            v-if="isRenderCharts && cardsSeries"
                             :label="getCards[index].label"
                             :isCardShow="getCards[index].isCardShow"
                             :chartOptions="getCards[index].options"
-                            :series="getCards[index].series"
+                            :series="cardsSeries[index]"
                         />
                     </div>
                 </GridItem>
@@ -95,7 +95,8 @@ export default {
                         icon: () => h(Icon, { icon: 'fluent:delete-12-regular' })
                     }
                 ]
-            }
+            },
+            cardsSeries: null
         }
     },
     watch: {
@@ -103,7 +104,7 @@ export default {
             this.setCardsPosition(newValue)
         }
     },
-    created() {
+    async created() {
         setTimeout(() => {
             this.layout = this.getCards.map((item) => item.position)
             this.isRenderGrid = true
@@ -112,13 +113,38 @@ export default {
                 this.isRenderCharts = true
             }, 0)
         }, 0)
+
+        const updateSeries = async () => {
+            const cardsSeries = []
+            for (const card of this.getCards) {
+                const series = []
+                for (const collection of card.sourceData) {
+                    const fetchData = (
+                        await this.$api.metrics.metrics.getInCollection({ id: collection.id })
+                    ).data
+                    series.push({
+                        name: collection.title,
+                        data: fetchData.map((el) => [el.createdAt, el.value])
+                    })
+                }
+                cardsSeries.push(series)
+            }
+            this.cardsSeries = cardsSeries
+        }
+
+        updateSeries()
+
+        this.updateDataInterval = setInterval(updateSeries, this.getOptions.timeUpdate)
+    },
+    unmounted() {
+        clearInterval(this.updateDataInterval)
     },
     computed: {
-        ...mapGetters('dashboard', ['getCards'])
+        ...mapGetters('dashboard', ['getCards', 'getOptions'])
     },
     methods: {
-        ...mapMutations('dashboard', ['setCardsPosition', 'removeCard']),
-        ...mapActions('dashboard', ['duplicateCard']),
+        ...mapMutations('dashboard', ['removeCard']),
+        ...mapActions('dashboard', ['setCardsPosition', 'duplicateCard']),
         handlerContextmenuItem(e, index) {
             e.preventDefault()
             this.contextMenu.isShow = false

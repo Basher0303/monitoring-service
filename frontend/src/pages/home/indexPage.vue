@@ -1,19 +1,10 @@
 <template lang="">
     <div>
-        <NavBar class="main-container" />
-        <PanelDasboard class="main-container" />
+        <h1>Главная страница</h1>
     </div>
 </template>
 
 <script>
-import NavBar from '@/components/NavBar/NavBar.vue'
-import PanelDasboard from '@/components/PanelDashboard/PanelDashboard.vue'
-
-export default {
-    components: {
-        NavBar,
-        PanelDasboard
-    }
-}
+export default {}
 </script>
 <style></style>

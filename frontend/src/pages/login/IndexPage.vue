@@ -139,6 +139,7 @@ export default {
                         password: this.form.password
                     })
                 ).data
+                localStorage.setItem('token', fetchData.accessToken)
                 this.setInfo(fetchData.user)
                 this.$router.push('/')
             } catch (error) {
@@ -150,6 +151,8 @@ export default {
                     this.$refs.emailFormItem.validate({
                         shouldRuleBeApplied: (rule) => rule.isErrorOnly
                     })
+                } else {
+                    console.log(error)
                 }
             } finally {
                 this.isLoading = false
