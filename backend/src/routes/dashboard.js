@@ -15,11 +15,9 @@ router.post('/',
     DashboardController.add);
 router.put('/', 
     authMiddleware,
-    upload.array('id', 'options', 'roles'), 
+    upload.array('id', 'name', 'options', 'roles'), 
     body('id').isLength({min: 24, max:24}),
-    body('options').notEmpty(),
-    body('roles').isArray(),
-    DashboardController.add);
+    DashboardController.update);
     
 
 module.exports = router;

@@ -31,7 +31,7 @@ module.exports = {
 				return next(ApiError.BadRequest('Ошибка валидации', errors));
 			}
 
-			let { options, roles } = req.body;
+			let { name, options, roles } = req.body;
 			roles = roles ?? [];
 
 			for (const role of roles) {
@@ -42,12 +42,41 @@ module.exports = {
 			}
 		
 			const result = await Dashboard.create({
+				name: name,
 				options: options,
 				roles: roles,
 				createdAt: Date.now()
 			});
 			res.status(201);
 			res.send(result);
+		} catch (error) {
+			next(error);
+		}
+	
+	},
+
+	update: async (req, res, next) => {
+		try {
+			const errors = validationResult(req);
+			if(!errors.isEmpty()) {
+				return next(ApiError.BadRequest('Ошибка валидации', errors));
+			}
+
+			let { id, name, options, roles } = req.body;
+			roles = roles ?? [];
+
+			for (const role of roles) {
+				const roleInBd = await Role.findById(role);
+				if(!roleInBd) {
+					return next(ApiError.BadRequest(`Role с id ${role} не существует`));
+				}
+			}
+		
+			const updated = await Dashboard.findOneAndUpdate({_id: id}, {name, options, roles}, {
+				returnOriginal: false
+			});
+			res.status(201);
+			res.send(updated);
 		} catch (error) {
 			next(error);
 		}
