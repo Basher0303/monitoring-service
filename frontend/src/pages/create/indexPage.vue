@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        <NavBar class="main-container" />
+        <NavBar :title="getName" class="main-container" />
         <PanelCreateChart @create="handlerCreateChart" class="main-container" />
     </div>
 </template>
@@ -16,7 +16,7 @@ export default {
         PanelCreateChart
     },
     computed: {
-        ...mapGetters('dashboard', ['getDashboardId', 'getOptions'])
+        ...mapGetters('dashboard', ['getId', 'getName', 'getOptions'])
     },
     methods: {
         ...mapMutations('dashboard', ['createCard']),
@@ -26,10 +26,10 @@ export default {
                 ...data
             })
             await this.$api.dashboard.update({
-                id: this.getDashboardId,
+                id: this.getId,
                 options: this.getOptions
             })
-            this.$router.push('/dashboard/65b68d08fdc5cc25039cb9c9')
+            this.$router.push('/dashboard/' + this.getId)
         }
     }
 }

@@ -41,7 +41,11 @@
             </GridLayout>
         </div>
         <div v-else class="alert-block">
-            <NAlert title="Начните прямо сейчас" type="info" @click="$router.push('/create')">
+            <NAlert
+                title="Начните прямо сейчас"
+                type="info"
+                @click="$router.push('/dashboard/create/' + $route.params.id)"
+            >
                 Нажмите сюда, чтобы создать свою первую карточку
             </NAlert>
         </div>

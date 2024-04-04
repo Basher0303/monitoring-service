@@ -5,7 +5,8 @@ import { debounce } from "@/utils/func.js"
 const module = {
     namespaced: true,
     state: () => ({
-        dashboardId: '',
+        id: '',
+        name: '',
         options: {
             timeUpdate: 0,
             timeInterval: {
@@ -38,10 +39,16 @@ const module = {
         removeCard(state, inex) {
             state.options.cards.splice(inex, 1)
         },
-        setDashboardId(state, id) {
-            state.dashboardId = id
+        setId(state, id) {
+            state.id = id
+        },
+        setName(state, name) {
+            state.name = name
         },
         setOptions(state, payload) {
+            if(!payload.cards) {
+                payload.cards = []
+            }
             state.options = payload
         },
         updateOptions(state, {key, value}) {
@@ -54,11 +61,11 @@ const module = {
         },
         updateOptions({getters, commit}, {key, value}) {
             commit('updateOptions', {key, value})
-            debounced(api.dashboard.update, {id: getters.getDashboardId, options: getters.getOptions})
+            debounced(api.dashboard.update, {id: getters.getId, options: getters.getOptions})
         },
         setCardsPosition({getters, commit}, payload) {
             commit('setCardsPosition', payload)
-            debounced(api.dashboard.update, {id: getters.getDashboardId, options: getters.getOptions})
+            debounced(api.dashboard.update, {id: getters.getId, options: getters.getOptions})
         },
     },
     getters: {
@@ -68,8 +75,11 @@ const module = {
         getCards(state) {
             return state.options.cards
         },
-        getDashboardId(state) {
-            return state.dashboardId
+        getId(state) {
+            return state.id
+        },
+        getName(state) {
+            return state.name || 'Без названия'
         },
         getOptions(state) {
             return state.options

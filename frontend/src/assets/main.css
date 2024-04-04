@@ -20,3 +20,51 @@ body {
     border-color: #bebebe !important;
     border-bottom-right-radius: 8px !important;
 }
+
+.n-form-item .n-form-item-feedback-wrapper {
+	padding-top: 3px !important;
+	line-height: 1 !important;
+	font-size: 12px !important;
+	min-height: 15px !important;
+}
+
+.main-shadow {
+	box-shadow:
+		0 0 #0000,
+		0 0 #0000,
+		0 0 #0000,
+		0 0 #0000,
+		0 10px 15px -3px rgb(0 0 0 / 0.1),
+		0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+:root {
+	--dark: #171717;
+	--gray: #6b7280;
+
+	--base: #fff;
+	--primary: #1f5bd5ff;
+	--primary-hover: #3b82f6ff;
+	--primary-pressed: #ff0c10ff;
+	--primary-suppl: #ff0004ff;
+	--info: #2080f0;
+	--info-hover: #4098fc;
+	--info-pressed: #1060c9;
+	--info-suppl: #4098fc;
+	--success: #18a058;
+	--success-hover: #36ad6a;
+	--success-pressed: #0c7a43;
+	--success-suppl: #36ad6a;
+	--warning: #f0a020;
+	--warning-hover: #fcb040;
+	--warning-pressed: #c97c10;
+	--warning-suppl: #fcb040;
+	--error: #d03050;
+	--error-hover: #de576d;
+	--error-pressed: #ab1f3f;
+	--error-suppl: #de576d;
+	--magic: #775dd0;
+
+	--md: 750px;
+	--lg: 1024px;
+}

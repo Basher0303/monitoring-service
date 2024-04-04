@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        <NavBar class="main-container" />
+        <NavBar :title="getName" class="main-container" />
         <PanelDasboard class="main-container" />
     </div>
 </template>
@@ -10,6 +10,7 @@ import NavBar from '@/components/NavBar/NavBar.vue'
 import PanelDasboard from '@/components/PanelDashboard/PanelDashboard.vue'
 import api from '@/api'
 import store from '@/store'
+import { mapGetters } from 'vuex'
 
 function deepTraversal(obj, callback) {
     for (const key in obj) {
@@ -56,7 +57,8 @@ export default {
                 }
             })
 
-            store.commit('dashboard/setDashboardId', to.params.id)
+            store.commit('dashboard/setId', to.params.id)
+            store.commit('dashboard/setName', fetchData.name)
             store.commit('dashboard/setOptions', fetchData.options)
 
             next()
@@ -64,6 +66,9 @@ export default {
             console.log(error)
             next(from)
         }
+    },
+    computed: {
+        ...mapGetters('dashboard', ['getName'])
     }
 }
 </script>
