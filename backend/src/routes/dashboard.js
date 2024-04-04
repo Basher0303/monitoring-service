@@ -7,7 +7,8 @@ const upload = multer();
 const { body, param } = require('express-validator');
 
 
-router.get("/:id", authMiddleware,  param('id').isLength({min: 24, max: 24}), DashboardController.getById);
+router.get("/single/:id", authMiddleware,  param('id').isLength({min: 24, max: 24}), DashboardController.getById);
+router.get("/list", authMiddleware, DashboardController.getList);
 router.delete("/:id", authMiddleware,  param('id').isLength({min: 24, max: 24}), DashboardController.delete);
 router.post('/', 
     authMiddleware,

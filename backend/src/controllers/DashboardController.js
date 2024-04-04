@@ -24,6 +24,21 @@ module.exports = {
 		}
     },
 
+	getList: async (req, res, next) => {
+		try {
+			const result = await Dashboard.find();
+			if (result === null) {
+				res.status(404);
+			} else {
+				res.status(200);
+			}
+			res.send(result);
+		} catch (error) {
+			console.log(error);
+			next(error);
+		}
+    },
+
 	add: async (req, res, next) => {
 		try {
 			const errors = validationResult(req);
