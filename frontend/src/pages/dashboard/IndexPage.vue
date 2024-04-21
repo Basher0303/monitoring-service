@@ -1,6 +1,10 @@
 <template lang="">
     <div>
-        <NavBar :title="getName" class="main-container" />
+        <NavBar
+            :options="['createCard', 'timeRange', 'timeUpdate']"
+            :title="getName"
+            class="main-container"
+        />
         <PanelDasboard class="main-container" />
     </div>
 </template>

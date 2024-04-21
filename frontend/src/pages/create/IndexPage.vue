@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        <NavBar :title="getName" class="main-container" />
+        <NavBar :title="getName" :options="[]" class="main-container" />
         <PanelCreateChart @create="handlerCreateChart" class="main-container" />
     </div>
 </template>

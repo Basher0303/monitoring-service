@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from '../pages/home/indexPage.vue'
-import DashboardPage from '../pages/dashboard/indexPage.vue'
-import CreatePage from '../pages/create/indexPage.vue'
+import HomePage from '../pages/home/IndexPage.vue'
+import AdminPage from '../pages/admin/IndexPage.vue'
+import DashboardPage from '../pages/dashboard/IndexPage.vue'
+import CreatePage from '../pages/create/IndexPage.vue'
 import LoginPage from '../pages/login/IndexPage.vue'
 import RegistrationPage from '../pages/registration/IndexPage.vue'
 import store from '@/store/index.js';
@@ -15,6 +16,13 @@ const router = createRouter({
             component: HomePage,
             meta: {
                 isAuth: true
+            }
+        },
+        {
+            path: '/admin',
+            component: AdminPage,
+            meta: {
+                isAuth: true,
             }
         },
         {
@@ -68,7 +76,7 @@ router.beforeEach((to, from, next) => {
 		// Подождать когда данные придут и выполнить переход на маршрут
 		const unwatch = store.watch(
 			(state, getters) => getters['user/isLoaded'],
-			(newValue, oldValue) => {
+			(newValue) => {
 				if (newValue) {
 					unwatch();
 					rerouteFunc();

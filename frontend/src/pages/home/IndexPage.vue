@@ -1,7 +1,7 @@
 <template lang="">
     <NavBar
-        isShort
         title="Главная страница"
+        :options="['createPanel']"
         class="main-container"
         @create="isCreateModalShow = true"
     />

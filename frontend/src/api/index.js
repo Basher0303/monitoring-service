@@ -3,6 +3,8 @@ import userAuthModule from './modules/user/auth';
 import mecticsCollectionsModule from './modules/metrics/collections';
 import mecticsModule from './modules/metrics/metrics';
 import dashboardModule from './modules/dashboard/dashboard';
+import rolesModule from './modules/roles/roles';
+import adminModule from './modules/admin/admin';
 
 const instance = axios.create({
 	baseURL: 'http://localhost:4000/api',
@@ -44,6 +46,8 @@ export default {
 		collections: mecticsCollectionsModule(instance),
 		metrics: mecticsModule(instance),
 	},
+	roles: rolesModule(instance),
+	admin: adminModule(instance),
 	dashboard: dashboardModule(instance),
 	instance: instance
 };

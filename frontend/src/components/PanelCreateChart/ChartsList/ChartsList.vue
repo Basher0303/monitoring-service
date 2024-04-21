@@ -35,11 +35,6 @@ export default {
                 type: 'area'
             },
             {
-                title: 'Столбцы',
-                desciprion: 'Базовая линейная диаграмма',
-                type: 'column'
-            },
-            {
                 title: 'Бар',
                 desciprion: 'Базовая линейная диаграмма',
                 type: 'bar'
