@@ -46,9 +46,11 @@ export default {
     props: {
         show: Boolean
     },
+    emits: ['update:show', 'edit'],
     data() {
         return {
             form: {
+                id: '',
                 email: '',
                 createdAt: '',
                 roles: []
@@ -67,12 +69,25 @@ export default {
         }
     },
     methods: {
-        setFormValues({ email, createdAt, roles }) {
+        setFormValues({ id, email, createdAt, roles }) {
+            this.form.id = id
             this.form.email = email
             this.form.createdAt = createdAt
             this.form.roles = roles
         },
-        handleSubmit() {}
+        async handleSubmit() {
+            try {
+                const fetchData = (
+                    await this.$api.admin.editUser({
+                        user: this.form.id,
+                        roles: this.form.roles
+                    })
+                ).data
+
+                this.$emit('edit', fetchData)
+                this.showComp = false
+            } catch (error) {}
+        }
     }
 }
 </script>

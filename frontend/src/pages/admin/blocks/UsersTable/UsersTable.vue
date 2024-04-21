@@ -11,7 +11,7 @@
             <tbody>
                 <tr v-for="user in users" :key="user._id" @click="$emit('select', user)">
                     <td>{{ user.email }}</td>
-                    <td>{{ $moment(user.createdAd).format('DD MMMM YYYY в HH:mm') }}</td>
+                    <td>{{ $moment(user.createdAt).format('DD MMMM YYYY в HH:mm') }}</td>
                     <td>
                         <NTag
                             v-for="role in user.roles"
@@ -21,6 +21,7 @@
                                     ? 'primary'
                                     : 'default'
                             "
+                            class="tag"
                         >
                             {{ getRoles.find((el) => el._id == role)?.name }}
                         </NTag>
@@ -39,23 +40,13 @@ export default {
         NCard,
         NTag
     },
-    data() {
-        return {
-            users: null
-        }
+    props: {
+        users: Array
     },
     computed: {
         ...mapGetters('global', ['getRoles'])
     },
-    emits: ['select'],
-    async created() {
-        try {
-            const fetchData = (await this.$api.admin.getAllUsers()).data
-            this.users = fetchData
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    emits: ['select']
 }
 </script>
 <style scoped>
@@ -64,5 +55,8 @@ tbody tr {
 }
 tbody tr:hover td {
     background: var(--n-th-color);
+}
+.tag {
+    margin: 4px 8px 4px 0;
 }
 </style>

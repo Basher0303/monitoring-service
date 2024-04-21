@@ -6,11 +6,11 @@
                 <RolesList @clickCreate="handleClickCreate" />
             </NGridItem>
             <NGridItem span="9">
-                <UsersTable @select="handleSelectUser" />
+                <UsersTable :users="users" @select="handleSelectUser" />
             </NGridItem>
         </NGrid>
     </div>
-    <EditModal ref="editModal" v-model:show="editModal.show" />
+    <EditModal ref="editModal" v-model:show="editModal.show" @edit="handleEditUser" />
     <CreateRoleModal v-model:show="createRoleModal.show" />
 </template>
 <script>
@@ -32,6 +32,7 @@ export default {
     },
     data() {
         return {
+            users: [],
             editModal: {
                 show: false
             },
@@ -40,17 +41,25 @@ export default {
             }
         }
     },
+    async created() {
+        const fetchData = (await this.$api.admin.getAllUsers()).data
+        this.users = fetchData
+    },
     methods: {
         handleClickCreate() {
             this.createRoleModal.show = true
         },
         handleSelectUser(user) {
             this.$refs.editModal.setFormValues({
+                id: user._id,
                 email: user.email,
                 createdAt: this.$moment(user.createdAt).format('DD MMMM YYYY в HH:mm'),
                 roles: user.roles
             })
             this.editModal.show = true
+        },
+        handleEditUser(user) {
+            this.users.find((el) => el._id == user._id).roles = user.roles
         }
     }
 }
