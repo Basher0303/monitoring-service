@@ -26,7 +26,18 @@ module.exports = {
 
 	getList: async (req, res, next) => {
 		try {
-			const result = await Dashboard.find();
+			const user = req.user;
+
+			const result = await Dashboard.find({
+				$or: [
+					{ roles: { $size: 0 } }, 
+					{
+						roles: {
+							$elemMatch: { $in: user.roles }
+						}
+					}
+				]
+			});
 			if (result === null) {
 				res.status(404);
 			} else {

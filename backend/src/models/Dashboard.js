@@ -9,7 +9,7 @@ module.exports = mongoose.model(
             required: true,
         },
         roles: [{
-            type: Schema.Types.ObjectId, ref: 'Role',
+            type: Schema.Types.ObjectId,
         }],
         options: {
             type: Object,
