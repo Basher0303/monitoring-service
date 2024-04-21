@@ -14,7 +14,7 @@ module.exports = {
         }
         const hashPassword = await bcrypt.hash(password, 7); 
         const activationLink = uuid.v4();
-        const newUser = await User.create({email, password: hashPassword, activationLink });
+        const newUser = await User.create({email, password: hashPassword, activationLink, createdAt: Date.now() });
         const newUserDto = new UserDto(newUser);
 
         await mailService.sendActivationMail(email, `${process.env.URL}/api/auth/activate/${activationLink}`);
