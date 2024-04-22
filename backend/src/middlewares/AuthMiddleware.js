@@ -1,7 +1,8 @@
 const ApiError = require("../exceptions/ApiError");
 const tokenService = require("../service/TokenService");
+const { User } = require('../models')
 
-module.exports = function(req, res, next) {
+module.exports = async function(req, res, next) {
     const authHeader = req.headers.authorization;
     if(!authHeader) {
         throw ApiError.Unauthorized();
@@ -12,10 +13,14 @@ module.exports = function(req, res, next) {
         throw ApiError.Unauthorized();
     }
 
-    const userData = tokenService.validateAccessToken(accessToken);
-    if(!userData) {
+    const user = tokenService.validateAccessToken(accessToken);
+    if(!user) {
         throw ApiError.Unauthorized();
     }
+    const userData = await User.findById(user.id).populate({
+        path: 'roles',
+        select: 'name'
+    });
     req.user = userData;
     next();
 }

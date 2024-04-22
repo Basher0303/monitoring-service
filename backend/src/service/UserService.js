@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Role } = require("../models");
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailService = require('../service/MailService');
@@ -15,7 +15,7 @@ module.exports = {
         const hashPassword = await bcrypt.hash(password, 7); 
         const activationLink = uuid.v4();
         const newUser = await User.create({email, password: hashPassword, activationLink, createdAt: Date.now() });
-        const newUserDto = new UserDto(newUser);
+        const newUserDto = await new UserDto().init(newUser);
 
         await mailService.sendActivationMail(email, `${process.env.URL}/api/auth/activate/${activationLink}`);
 
@@ -48,7 +48,7 @@ module.exports = {
         if(!isPassEquals) {
             throw ApiError.BadRequest('Неверный пароль');
         }
-        const userDto = new UserDto(candidate);
+        const userDto = await new UserDto().init(candidate);
         const tokens = await tokenService.generateTokens({...userDto});
         await tokenService.saveToken(candidate._id, tokens.refreshToken);
         return {
@@ -73,7 +73,7 @@ module.exports = {
         }
 
         const user = await User.findById(userData.id);
-        const userDto = new UserDto(user);
+        const userDto = await new UserDto().init(user);
         const tokens = await tokenService.generateTokens({...userDto});
         await tokenService.saveToken(user._id, tokens.refreshToken);
         return {
