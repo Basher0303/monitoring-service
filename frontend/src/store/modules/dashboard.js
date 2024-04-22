@@ -7,6 +7,7 @@ const module = {
     state: () => ({
         id: '',
         name: '',
+        roles: [],
         options: {
             timeUpdate: 0,
             timeInterval: {
@@ -45,6 +46,9 @@ const module = {
         setName(state, name) {
             state.name = name
         },
+        setRoles(state, roles) {
+            state.roles = roles
+        },
         setOptions(state, payload) {
             if(!payload.cards) {
                 payload.cards = []
@@ -61,11 +65,11 @@ const module = {
         },
         updateOptions({getters, commit}, {key, value}) {
             commit('updateOptions', {key, value})
-            debounced(api.dashboard.update, {id: getters.getId, options: getters.getOptions})
+            debounced(api.dashboard.updateOptions, {id: getters.getId, options: getters.getOptions})
         },
         setCardsPosition({getters, commit}, payload) {
             commit('setCardsPosition', payload)
-            debounced(api.dashboard.update, {id: getters.getId, options: getters.getOptions})
+            debounced(api.dashboard.updateOptions, {id: getters.getId, options: getters.getOptions})
         },
     },
     getters: {
@@ -80,6 +84,9 @@ const module = {
         },
         getName(state) {
             return state.name || 'Без названия'
+        },
+        getRoles(state) {
+            return state.roles
         },
         getOptions(state) {
             return state.options

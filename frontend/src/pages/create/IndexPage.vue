@@ -25,7 +25,7 @@ export default {
                 isCardShow: true,
                 ...data
             })
-            await this.$api.dashboard.update({
+            await this.$api.dashboard.updateOptions({
                 id: this.getId,
                 options: this.getOptions
             })

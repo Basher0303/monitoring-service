@@ -93,6 +93,11 @@
                     <span style="font-weight: 500">Создать приборнуню панель</span>
                 </template>
             </NButton>
+            <NButton v-if="options.includes('editPanel')" secondary circle @click="$emit('edit')">
+                <template #icon>
+                    <NIcon><Icon icon="bx:edit" /></NIcon>
+                </template>
+            </NButton>
             <NButton
                 v-if="options.includes('createCard')"
                 secondary
@@ -161,10 +166,10 @@ export default {
         title: String,
         options: {
             type: Array,
-            default: () => ['createPanel', 'createCard', 'timeRange', 'timeUpdate']
+            default: () => ['createPanel', 'editPanel', 'createCard', 'timeRange', 'timeUpdate']
         }
     },
-    emist: ['create'],
+    emits: ['create', 'edit'],
     data() {
         return {}
     },
@@ -201,14 +206,14 @@ export default {
 
         this.dropdownProfileOptions = [
             {
+                label: this.getInfo.email,
+                disabled: true,
+                icon: () => h(NIcon, {}, h(Icon, { icon: 'ph:user-bold' }))
+            },
+            {
                 label: 'Администрирование',
                 key: 'admin',
                 icon: () => h(NIcon, {}, h(Icon, { icon: 'eos-icons:admin-outlined' }))
-            },
-            {
-                label: 'Настройки',
-                key: 'settings',
-                icon: () => h(NIcon, {}, h(Icon, { icon: 'material-symbols:settings-outline' }))
             },
             {
                 label: 'Выйти из аккаунта',
@@ -219,6 +224,7 @@ export default {
     },
     computed: {
         ...mapGetters('dashboard', ['getOptions']),
+        ...mapGetters('user', ['getInfo']),
         timeUpdateValue: {
             get() {
                 return this.getOptions.timeUpdate

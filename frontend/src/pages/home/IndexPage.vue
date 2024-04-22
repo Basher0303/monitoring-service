@@ -7,7 +7,7 @@
     />
     <div class="main-container">
         <DashboardsList
-            v-if="cards !== null"
+            v-if="dashboards !== null"
             :list="dashboards"
             @select="handleSelectDashboardList"
         />

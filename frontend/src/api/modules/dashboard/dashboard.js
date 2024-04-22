@@ -23,8 +23,11 @@ export default function (instance) {
         delete({id}) {
 			return instance.delete('/dashboard/' + id);
 		},
-		update({id, options, name, roles}) {
-			return instance.put('/dashboard', {id, options, name, roles});
+		update({id, name, roles}) {
+			return instance.put('/dashboard/update', {id, name, roles});
+		},
+		updateOptions({id, options}) {
+			return instance.put('/dashboard/update-options', {id, options});
 		}
 	};
 }
