@@ -14,11 +14,16 @@ router.post('/',
     authMiddleware,
     upload.array('options', 'roles'), 
     DashboardController.add);
-router.put('/', 
+router.put('/update', 
     authMiddleware,
-    upload.array('id', 'name', 'options', 'roles'), 
+    upload.array('id', 'name', 'roles'), 
     body('id').isLength({min: 24, max:24}),
     DashboardController.update);
+router.put('/update-options', 
+    authMiddleware,
+    upload.array('id', 'options'), 
+    body('id').isLength({min: 24, max:24}),
+    DashboardController.updateOptions);
     
 
 module.exports = router;

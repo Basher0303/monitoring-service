@@ -33,7 +33,12 @@
                 </template>
                 <template #footer>
                     <div class="button-group-action">
-                        <NButton strong secondary @click="$router.push('/')">Закрыть</NButton>
+                        <NButton
+                            strong
+                            secondary
+                            @click="$router.push(`/dashboard/${$route.params.id}`)"
+                            >Закрыть</NButton
+                        >
                         <NButton strong secondary type="primary" @click="handleClickSave">
                             Создать
                         </NButton>

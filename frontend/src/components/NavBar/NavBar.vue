@@ -75,72 +75,101 @@
                         <!----></g
                     ></g
                 >
-                <span style="font-weight: 600; font-size: 32px">isMetric</span>
+                <span style="font-weight: 500; font-size: 32px">isMetric</span>
             </div>
             <div class="title">{{ title }}</div>
         </div>
         <div class="button-group">
-            <NButton v-if="isShort" secondary type="success" @click="$emit('create')">
+            <NButton
+                v-if="options.includes('createPanel')"
+                secondary
+                type="success"
+                @click="$emit('create')"
+            >
                 <template #icon>
                     <NIcon><Icon icon="ic:baseline-addchart" /></NIcon>
                 </template>
                 <template #default>
-                    <span style="font-weight: 600">Создать приборнуню панель</span>
+                    <span style="font-weight: 500">Создать приборнуню панель</span>
                 </template>
             </NButton>
-            <template v-else>
-                <NButton
-                    secondary
-                    type="success"
-                    @click="$router.push('/dashboard/create/' + $route.params.id)"
-                >
+            <NButton v-if="options.includes('editPanel')" secondary circle @click="$emit('edit')">
+                <template #icon>
+                    <NIcon><Icon icon="bx:edit" /></NIcon>
+                </template>
+            </NButton>
+            <NButton
+                v-if="options.includes('createCard')"
+                secondary
+                type="success"
+                @click="$router.push('/dashboard/create/' + $route.params.id)"
+            >
+                <template #icon>
+                    <NIcon><Icon icon="ic:baseline-addchart" /></NIcon>
+                </template>
+                <template #default><span style="font-weight: 500">Добавить</span></template>
+            </NButton>
+            <NSelect
+                v-if="options.includes('timeRange')"
+                :options="selectTimeRangeOptions"
+                :consistent-menu-width="false"
+                placeholder="Временной интервал"
+                class="select-time-range"
+            />
+            <NInputGroup v-if="options.includes('timeUpdate')" class="select-time-update">
+                <NButton strong>
                     <template #icon>
-                        <NIcon><Icon icon="ic:baseline-addchart" /></NIcon>
+                        <NIcon><Icon icon="tabler:reload" /></NIcon>
                     </template>
-                    <template #default><span style="font-weight: 600">Добавить</span></template>
                 </NButton>
                 <NSelect
-                    :options="selectTimeRangeOptions"
+                    v-model:value="timeUpdateValue"
+                    :options="selectTimeUpdateOptions"
                     :consistent-menu-width="false"
-                    placeholder="Временной интервал"
-                    class="select-time-range"
+                    placeholder="Период обновления"
                 />
-                <NInputGroup class="select-time-update">
-                    <NButton strong>
-                        <template #icon>
-                            <NIcon><Icon icon="tabler:reload" /></NIcon>
-                        </template>
-                    </NButton>
-                    <NSelect
-                        v-model:value="timeUpdateValue"
-                        :options="selectTimeUpdateOptions"
-                        :consistent-menu-width="false"
-                        placeholder="Период обновления"
-                    />
-                </NInputGroup>
-            </template>
-            <NButton strong secondary type="error" @click="handleClickLogout"> Выйти </NButton>
+            </NInputGroup>
+            <NDropdown
+                trigger="click"
+                :options="dropdownProfileOptions"
+                showArrow
+                @select="handleSelectProfile"
+            >
+                <NButton strong secondary type="primary">
+                    <template #icon>
+                        <NIcon><Icon icon="ph:user-bold" /></NIcon>
+                    </template>
+                    <template #default>
+                        <span style="font-weight: 500">Мой профиль</span>
+                    </template>
+                </NButton>
+            </NDropdown>
         </div>
     </div>
 </template>
 
 <script>
-import { NButton, NIcon, NSelect, NInputGroup } from 'naive-ui'
+import { NButton, NIcon, NSelect, NInputGroup, NDropdown } from 'naive-ui'
 import { Icon } from '@iconify/vue'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
+import { h } from 'vue'
 export default {
     components: {
         NButton,
         NIcon,
         NSelect,
         NInputGroup,
+        NDropdown,
         Icon
     },
     props: {
         title: String,
-        isShort: Boolean
+        options: {
+            type: Array,
+            default: () => ['createPanel', 'editPanel', 'createCard', 'timeRange', 'timeUpdate']
+        }
     },
-    emist: ['create'],
+    emits: ['create', 'edit'],
     data() {
         return {}
     },
@@ -174,9 +203,28 @@ export default {
                 value: 10 * 60 * 1000
             }
         ]
+
+        this.dropdownProfileOptions = [
+            {
+                label: this.getInfo.email,
+                disabled: true,
+                icon: () => h(NIcon, {}, h(Icon, { icon: 'ph:user-bold' }))
+            },
+            {
+                label: 'Администрирование',
+                key: 'admin',
+                icon: () => h(NIcon, {}, h(Icon, { icon: 'eos-icons:admin-outlined' }))
+            },
+            {
+                label: 'Выйти из аккаунта',
+                key: 'exit',
+                icon: () => h(NIcon, {}, h(Icon, { icon: 'uil:exit' }))
+            }
+        ]
     },
     computed: {
         ...mapGetters('dashboard', ['getOptions']),
+        ...mapGetters('user', ['getInfo']),
         timeUpdateValue: {
             get() {
                 return this.getOptions.timeUpdate
@@ -189,7 +237,14 @@ export default {
     methods: {
         ...mapMutations('user', ['clearInfo']),
         ...mapActions('dashboard', ['updateOptions']),
-        async handleClickLogout() {
+        handleSelectProfile(key) {
+            if (key == 'admin') {
+                this.$router.push('/admin')
+            } else if (key == 'exit') {
+                this.logout()
+            }
+        },
+        async logout() {
             try {
                 await this.$api.user.auth.logout()
                 this.clearInfo()

@@ -8,8 +8,13 @@ module.exports = mongoose.model(
             type: String,
             required: true,
         },
+        creator: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
         roles: [{
-            type: Schema.Types.ObjectId, ref: 'Role',
+            type: Schema.Types.ObjectId,
+            ref: 'Role'
         }],
         options: {
             type: Object,

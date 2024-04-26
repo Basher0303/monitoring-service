@@ -1,13 +1,13 @@
 <template lang="">
     <NavBar
-        isShort
         title="Главная страница"
+        :options="['createPanel']"
         class="main-container"
         @create="isCreateModalShow = true"
     />
     <div class="main-container">
         <DashboardsList
-            v-if="cards !== null"
+            v-if="dashboards !== null"
             :list="dashboards"
             @select="handleSelectDashboardList"
         />

@@ -3,4 +3,6 @@ module.exports = {
 	MetricController: require("./MetricController"),
 	UserController: require("./UserController"),
 	DashboardController: require("./DashboardController"),
+	AdminController: require("./AdminController"),
+	RoleController: require("./RoleController"),
 };

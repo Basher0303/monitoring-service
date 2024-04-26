@@ -6,20 +6,37 @@
             {{ numsCards }} шт.
         </div>
         <div>
-            <span class="option-label">Создатель:</span>
-            Вы
+            <span class="option-label">Роли: </span>
+            <template v-if="roles.length">
+                <RoleTag
+                    v-for="role in roles"
+                    :key="role._id"
+                    size="small"
+                    class="tag"
+                    :name="role.name"
+                />
+            </template>
+            <span v-else>Доступен всем</span>
         </div>
         <div>
-            <span class="option-label">Создана:</span>
+            <span class="option-label">Создатель: </span>
+            <span>{{ creator }}</span>
+            <span v-if="creator == getInfo.email"> (Вы)</span>
+        </div>
+        <div>
+            <span class="option-label">Дата создания:</span>
             {{ $moment(createdAt).format('DD MMMM YYYY в HH:mm') }}
         </div>
     </NAlert>
 </template>
 <script>
 import { NAlert } from 'naive-ui'
+import RoleTag from '../../../components/RoleTag/RoleTag.vue'
+import { mapGetters } from 'vuex'
 export default {
     components: {
-        NAlert
+        NAlert,
+        RoleTag
     },
     props: {
         id: {
@@ -30,14 +47,24 @@ export default {
             type: String,
             reqired: true
         },
+        creator: {
+            type: String,
+            reqired: true
+        },
+        roles: {
+            type: Array,
+            reqired: true
+        },
         createdAt: {
-            type: Number,
             reqired: true
         },
         numsCards: {
             type: Number,
             default: 0
         }
+    },
+    computed: {
+        ...mapGetters('user', ['getInfo'])
     }
 }
 </script>
@@ -63,5 +90,8 @@ export default {
 }
 .option-label {
     color: var(--gray);
+}
+.tag {
+    margin-left: 6px;
 }
 </style>

@@ -135,15 +135,25 @@ export default {
     },
     methods: {
         ...mapMutations('user', ['setInfo', 'setLoaded']),
+        ...mapMutations('global', ['setRoles']),
         async loadUserInfo() {
             try {
                 const fetchData = (await this.$api.user.auth.refreshToken()).data
                 this.setInfo(fetchData.user)
+                this.loadRoles()
             } catch (error) {
                 console.log(error)
             }
             this.setLoaded(true)
             this.isUserInfoLoaded = true
+        },
+        async loadRoles() {
+            try {
+                const fetchData = (await this.$api.roles.getAll()).data
+                this.setRoles(fetchData)
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 }

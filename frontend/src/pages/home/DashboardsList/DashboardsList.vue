@@ -4,6 +4,8 @@
             <DashboardItem
                 :id="item._id"
                 :name="item.name"
+                :roles="item.roles"
+                :creator="item.creator.email"
                 :createdAt="item.createdAt"
                 :numsCards="item.options?.cards?.length"
                 @click="$emit('select', item._id)"
