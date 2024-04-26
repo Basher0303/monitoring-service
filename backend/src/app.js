@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const routes = require("./routes");
 const errorMiddleware = require("./middlewares/ErrorMiddleware");
 
+const path = require('path');
 const app = express();
 
 mongoose
@@ -30,6 +31,11 @@ app.use(cors({
 app.use("/api", routes);
 app.use(errorMiddleware);
 
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+app.get('/', async (req, res) => {
+	res.status(200);
+	res.sendFile(path.join(__dirname, '../../frontend/dist', 'index.html'));
+});
 app.listen(port, () => {
-	console.log(`Listening on port ${port}\nhttp://localhost:${port}/`);
+	console.log(`Listening on port ${port}\nhttp://localhost:${port}`);
 });
