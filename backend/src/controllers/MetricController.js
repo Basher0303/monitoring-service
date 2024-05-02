@@ -34,6 +34,9 @@ module.exports = {
 	/**@type {RequestHandler} */
 	getByCollectionId: async (req, res) => {
 		const id = req.params.id;
+		const start = +req.query?.start || 0;
+		const end = +req.query?.end || Date.now();
+
 		if (id.length !== 24) {
 			res.status(400);
 			res.json({
@@ -41,7 +44,13 @@ module.exports = {
 			});
 		} else {
 			const resCollection = await MetricCollection.findById(id);
-			const resMetrics = await Metric.find({collectionId: id}).exec();
+			const resMetrics = await Metric.find({
+				collectionId: id,
+				createdAt: {
+					$gte: new Date(start),
+					$lt: new Date(end)
+				}
+			}).exec();
 			
 			if (resCollection === null) {
 				res.status(404);

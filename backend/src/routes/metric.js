@@ -5,12 +5,12 @@ const authMiddleware = require('../middlewares/AuthMiddleware');
 const multer = require('multer');
 const upload = multer();
 
-router.get("/", authMiddleware, MetricController.getAll)
-router.post("/", authMiddleware, upload.array('collectionId', 'value'), MetricController.add)
+router.get("/", MetricController.getAll)
+router.post("/", upload.array('collectionId', 'value'), MetricController.add)
 
-router.get("/:id", authMiddleware, MetricController.getById)
-router.delete("/:id", authMiddleware, MetricController.delete)
+router.get("/:id", MetricController.getById)
+router.delete("/:id", MetricController.delete)
 
-router.get("/list/:id", authMiddleware, MetricController.getByCollectionId)
+router.get("/list/:id", MetricController.getByCollectionId)
 
 module.exports = router;
