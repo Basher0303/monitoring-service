@@ -6,3 +6,8 @@ backend/node_modules
 backend/package-lock.json
 backend/.vscode
 backend/.env
+
+external-service/node_modules
+external-service/package-lock.json
+external-service/.vscode
+external-service/.env
