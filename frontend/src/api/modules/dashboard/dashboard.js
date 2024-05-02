@@ -7,8 +7,8 @@ export default function (instance) {
 				options: {
 					timeUpdate: "300000",
 					timeInterval: {
-						start: "0",
-						end: "0"
+						start: null,
+						end: null
 					},
 					cards: []
 				}

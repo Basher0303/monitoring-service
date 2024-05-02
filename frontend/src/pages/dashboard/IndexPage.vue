@@ -51,7 +51,7 @@ function deepTraversal(obj, callback) {
                         deepTraversal(value[i], callback)
                     } else {
                         // Или вызываем callback для каждого элемента массива
-                        callback(obj, key, value[i])
+                        callback(value, i, value[i])
                     }
                 }
             } else if (typeof value === 'object' && value !== null) {

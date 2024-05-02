@@ -109,13 +109,31 @@
                 </template>
                 <template #default><span style="font-weight: 500">Добавить</span></template>
             </NButton>
-            <NSelect
+            <NInputGroup style="width: auto">
+                <NDatePicker
+                    v-if="options.includes('timeRange')"
+                    v-model:value="timeIntervalStartValue"
+                    type="datetime"
+                    format="dd.MM.yyyy HH:mm:ss"
+                    clearable
+                    style="width: 220px"
+                />
+                <NDatePicker
+                    v-if="options.includes('timeRange')"
+                    v-model:value="timeIntervalEndValue"
+                    type="datetime"
+                    format="dd.MM.yyyy HH:mm:ss"
+                    clearable
+                    style="width: 220px"
+                />
+            </NInputGroup>
+            <!-- <NSelect
                 v-if="options.includes('timeRange')"
                 :options="selectTimeRangeOptions"
                 :consistent-menu-width="false"
                 placeholder="Временной интервал"
                 class="select-time-range"
-            />
+            /> -->
             <NInputGroup v-if="options.includes('timeUpdate')" class="select-time-update">
                 <NButton strong>
                     <template #icon>
@@ -149,7 +167,7 @@
 </template>
 
 <script>
-import { NButton, NIcon, NSelect, NInputGroup, NDropdown } from 'naive-ui'
+import { NButton, NIcon, NSelect, NInputGroup, NDropdown, NDatePicker } from 'naive-ui'
 import { Icon } from '@iconify/vue'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
 import { h } from 'vue'
@@ -160,6 +178,7 @@ export default {
         NSelect,
         NInputGroup,
         NDropdown,
+        NDatePicker,
         Icon
     },
     props: {
@@ -190,6 +209,14 @@ export default {
         ]
 
         this.selectTimeUpdateOptions = [
+            {
+                label: '5 секунд',
+                value: 5 * 1000
+            },
+            {
+                label: '30 секунд',
+                value: 30 * 1000
+            },
             {
                 label: '1 минута',
                 value: 60 * 1000
@@ -225,6 +252,28 @@ export default {
     computed: {
         ...mapGetters('dashboard', ['getOptions']),
         ...mapGetters('user', ['getInfo']),
+        timeIntervalStartValue: {
+            get() {
+                return this.getOptions.timeInterval?.start
+            },
+            set(value) {
+                this.updateOptions({
+                    key: 'timeInterval.start',
+                    value: value
+                })
+            }
+        },
+        timeIntervalEndValue: {
+            get() {
+                return this.getOptions.timeInterval?.end
+            },
+            set(value) {
+                this.updateOptions({
+                    key: 'timeInterval.end',
+                    value: value
+                })
+            }
+        },
         timeUpdateValue: {
             get() {
                 return this.getOptions.timeUpdate
@@ -293,6 +342,6 @@ export default {
 }
 
 .button-group .select-time-update {
-    width: 250px;
+    width: 200px;
 }
 </style>

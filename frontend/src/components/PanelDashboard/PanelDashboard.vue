@@ -124,7 +124,11 @@ export default {
                 const series = []
                 for (const collection of card.sourceData) {
                     const fetchData = (
-                        await this.$api.metrics.metrics.getInCollection({ id: collection.id })
+                        await this.$api.metrics.metrics.getInCollection({
+                            id: collection.id,
+                            start: this.getOptions.timeInterval?.start,
+                            end: this.getOptions.timeInterval?.end
+                        })
                     ).data
                     series.push({
                         name: collection.title,
@@ -137,7 +141,6 @@ export default {
         }
 
         updateSeries()
-
         this.updateDataInterval = setInterval(updateSeries, this.getOptions.timeUpdate)
     },
     unmounted() {

@@ -60,10 +60,10 @@ export default {
     computed: {
         colorsComp: {
             get() {
-                return this.colors[0]
+                return this.colors
             },
             set(value) {
-                this.$emit('update:colors', [value])
+                this.$emit('update:colors', value)
                 this.$emit('update')
             }
         },

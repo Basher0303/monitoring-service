@@ -27,7 +27,6 @@ export default {
             default: true
         },
         label: {
-            type: String,
             default: ''
         },
         series: {

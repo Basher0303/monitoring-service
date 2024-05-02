@@ -25,11 +25,12 @@ export default {
                 isCardShow: true,
                 ...data
             })
+
             await this.$api.dashboard.updateOptions({
-                id: this.getId,
+                id: this.$route.params.id,
                 options: this.getOptions
             })
-            this.$router.push('/dashboard/' + this.getId)
+            this.$router.push('/dashboard/' + this.$route.params.id)
         }
     }
 }
