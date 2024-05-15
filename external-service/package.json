@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "temp": "node ./src/temp.js",
+    "random": "node ./src/random.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
