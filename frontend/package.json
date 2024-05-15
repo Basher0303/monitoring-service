@@ -13,6 +13,7 @@
     "apexcharts": "^3.42.0",
     "axios": "^1.6.5",
     "grid-layout-plus": "^1.0.3",
+    "maska": "^2.1.11",
     "moment": "^2.30.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4",

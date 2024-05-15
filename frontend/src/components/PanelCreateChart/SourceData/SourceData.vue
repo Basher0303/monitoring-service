@@ -36,8 +36,36 @@
                         </NFormItem>
                     </NGridItem>
                     <NGridItem span="5">
-                        <NFormItem label="Фильтр">
-                            <NInput v-model:value="collection.filter" />
+                        <NFormItem>
+                            <template #label>
+                                <div style="display: flex; align-items: center">
+                                    <span style="margin-right: 4px">Фильтр</span>
+                                    <NPopover trigger="hover">
+                                        <template #trigger>
+                                            <Icon icon="ph:question-bold" style="cursor: pointer" />
+                                        </template>
+                                        <div>
+                                            <div>Правило для фильтрации значений метрик</div>
+                                            <div>Разрешённые знаки: ">", "<", ">=", "<="</div>
+                                            <div>Пример: >=50</div>
+                                        </div>
+                                    </NPopover>
+                                </div>
+                            </template>
+                            <NDynamicTags
+                                v-model:value="collection.filter"
+                                :max="2"
+                                v-maska:[filterMask]
+                                @update:value="handleUpdateCollection"
+                                @create="
+                                    (label) => {
+                                        return label.replace('=', '').length > 1
+                                            ? label
+                                            : label + '0'
+                                    }
+                                "
+                            >
+                            </NDynamicTags>
                         </NFormItem>
                     </NGridItem>
                 </NGrid>
@@ -77,10 +105,14 @@ import {
     NSelect,
     NIcon,
     NRadio,
-    NRadioGroup
+    NRadioGroup,
+    NDynamicTags,
+    NPopover
 } from 'naive-ui'
 import { Icon } from '@iconify/vue'
+import { vMaska } from 'maska'
 export default {
+    directives: { maska: vMaska },
     components: {
         NGrid,
         NGridItem,
@@ -92,19 +124,31 @@ export default {
         NIcon,
         NRadio,
         NRadioGroup,
+        NDynamicTags,
+        NPopover,
         Icon
     },
     emits: ['updateCollections', 'updateSelectedCollection'],
     data() {
         return {
             collectionsOptions: null,
+            filterValue: '',
             form: {
                 selected: 0,
-                collections: [{ id: null, title: '', filter: '', type: 'area' }]
+                collections: [{ id: null, title: '', filter: [], type: 'area' }]
             }
         }
     },
     async created() {
+        this.filterMask = {
+            mask: 'N=D.D',
+            tokens: {
+                D: { pattern: /[0-9]/, multiple: true },
+                F: { pattern: /[0-9]/, repeated: true },
+                '=': { pattern: /[=]/, optional: true },
+                N: { pattern: /[<>]/ }
+            }
+        }
         this.handleUpdateCollection()
         try {
             this.collectionsOptions = (await this.$api.metrics.collections.getAll()).data.map(
@@ -118,7 +162,7 @@ export default {
     },
     methods: {
         handleClickAddCollection() {
-            this.form.collections.push({ id: null, title: '', filter: '', type: 'area' })
+            this.form.collections.push({ id: null, title: '', filter: [], type: 'area' })
             this.form.selected = this.form.collections.length - 1
         },
         handleUpdateCollection() {
