@@ -26,6 +26,8 @@ export default {
                 ...data
             })
 
+            console.log(this.getOptions)
+
             await this.$api.dashboard.updateOptions({
                 id: this.$route.params.id,
                 options: this.getOptions

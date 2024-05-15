@@ -3,7 +3,12 @@
         <NGridItem span="8">
             <NCard style="height: 400px">
                 <div v-if="false" class="empty-block">Данные отсутствуют</div>
-                <VueApexCharts height="100%" :options="cardData.options" :series="series" />
+                <VueApexCharts
+                    ref="chart"
+                    height="100%"
+                    :options="cardData.options"
+                    :series="series"
+                />
             </NCard>
             <NCard style="margin-top: 20px" title="Источник данных">
                 <SourceData
@@ -87,11 +92,17 @@ export default {
                         size: 0,
                         strokeWidth: 1
                     },
+                    annotations: {
+                        yaxis: []
+                    },
                     colors: ['#77B6EA', '#77B6EA', '#77B6EA', '#77B6EA', '#77B6EA'],
                     stroke: {
                         curve: ['smooth', 'smooth', 'smooth', 'smooth', 'smooth'],
                         width: [1, 2, 3, 4, 5],
                         dashArray: [0, 1, 2, 3, 4]
+                    },
+                    yaxis: {
+                        min: 0
                     },
                     xaxis: {
                         type: 'datetime',
@@ -150,16 +161,36 @@ export default {
         async handleUpdateSourceData(collections) {
             this.cardData.sourceData = collections
             const newSeries = []
+            const annotations = []
             for (const collection of collections) {
                 const fetchData = (
-                    await this.$api.metrics.metrics.getInCollection({ id: collection.id })
+                    await this.$api.metrics.metrics.getInCollection({
+                        id: collection.id,
+                        filter: collection.filter
+                    })
                 ).data
                 newSeries.push({
                     type: collection.type,
                     name: collection.title,
                     data: fetchData.map((el) => [el.createdAt, el.value])
                 })
+
+                annotations.push(
+                    ...collection.filter.map((el) => ({
+                        y: +el.replace(/[^\d.]/g, ''),
+                        strokeDashArray: el.includes('=') ? 20 : 0,
+                        borderWidth: 1,
+                        borderColor: `var(--${el.includes('>') ? 'error' : 'warning'})`
+                    }))
+                )
             }
+
+            this.$refs.chart.updateOptions({
+                annotations: {
+                    yaxis: annotations
+                }
+            })
+            this.cardData.options.annotations.yaxis = annotations
             this.series = newSeries
         }
     }

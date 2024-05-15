@@ -127,7 +127,8 @@ export default {
                         await this.$api.metrics.metrics.getInCollection({
                             id: collection.id,
                             start: this.getOptions.timeInterval?.start,
-                            end: this.getOptions.timeInterval?.end
+                            end: this.getOptions.timeInterval?.end,
+                            filter: collection.filter
                         })
                     ).data
                     series.push({
