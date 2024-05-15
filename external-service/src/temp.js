@@ -18,7 +18,7 @@ async function main() {
                     uri: url + '/metric',
                     body: {
                         collectionId: '66339d440caaee6f61b2b8c5',
-                        value: data.cores[0]
+                        value: Math.random() > 0.1 ? data.cores[0] : randomInteger(120, 200)
                     },
                     json: true 
                 })
@@ -31,7 +31,7 @@ async function main() {
                     uri: url + '/metric',
                     body: {
                         collectionId: '66339d4b0caaee6f61b2b8c7',
-                        value: data.cores[1]
+                        value: Math.random() > 0.1 ? data.cores[1] : randomInteger(120, 200)
                     },
                     json: true 
                 })
@@ -44,7 +44,7 @@ async function main() {
                     uri: url + '/metric',
                     body: {
                         collectionId: '66339d4f0caaee6f61b2b8d9',
-                        value: data.main
+                        value: Math.random() > 0.1 ? data.main : randomInteger(120, 200)
                     },
                     json: true 
                 })
