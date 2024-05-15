@@ -36,6 +36,7 @@ module.exports = {
 		const id = req.params.id;
 		const start = +req.query?.start || 0;
 		const end = +req.query?.end || Date.now();
+		const filter = req.query.filter || []; 
 
 		if (id.length !== 24) {
 			res.status(400);
@@ -43,15 +44,36 @@ module.exports = {
 				message: "Bad ID",
 			});
 		} else {
-			const resCollection = await MetricCollection.findById(id);
-			const resMetrics = await Metric.find({
+			const findOptions = {
 				collectionId: id,
 				createdAt: {
 					$gte: new Date(start),
 					$lt: new Date(end)
 				}
-			}).exec();
-			
+			};
+
+			let filterRule = filter.reduce((result, el) => {
+				let rule;
+				if(el.includes('>')) {
+					rule = '$gt';
+				} else {
+					rule = '$lt';
+				}
+				if(el.includes('=')) {
+					rule += 'e';
+				}
+				result[rule] = +el.replace(/[^\d.]/g, ''); 
+				return result
+			}, {});
+
+
+			if(Object.keys(filterRule).length > 0) {
+				findOptions.value = filterRule
+			}
+
+			const resCollection = await MetricCollection.findById(id);
+			const resMetrics = await Metric.find(findOptions).exec();
+
 			if (resCollection === null) {
 				res.status(404);
 			} else {
